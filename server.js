@@ -27,6 +27,14 @@ server.route({
 
 const init = async () => {
 
+    await server.register({
+        plugin: require('hapi-pino'),
+        options: {
+            prettyPrint: true,
+            logEvents: ['response', 'onPostStart']
+        }
+    });
+
     await server.register(require('inert'));
 
     server.route({
