@@ -2,20 +2,26 @@
 
 const Hapi = require('hapi');
 
+// Set Port
 const server = Hapi.server({
     port: 3000,
     host: 'localhost'
 });
 
+server.route(require('./routes.js'));
+
+/*
+// Home Route
 server.route({
     method: 'GET',
     path: '/',
     handler: (request, h) => {
 
-        return 'Hello, world!';
+        return '<h1>Hello, world!</h1>';
     }
 });
 
+// Dynamic Route
 server.route({
     method: 'GET',
     path: '/{name}',
@@ -24,9 +30,11 @@ server.route({
         return 'Hello, ' + encodeURIComponent(request.params.name) + '!';
     }
 });
+*/
 
 const init = async () => {
 
+    // Pino plugin for logging
     await server.register({
         plugin: require('hapi-pino'),
         options: {
@@ -36,22 +44,24 @@ const init = async () => {
     });
 
     await server.register(require('inert'));
-
+/*
+    // Static Route
     server.route({
         method: 'GET',
-        path: '/hello',
+        path: '/',
         handler: (request, h) => {
 
-            return h.file('./public/hello.html');
+            return h.file('./public/index.html');
         }
     });
-
+*/
+    // Start server and handle errors... necessary?
     await server.start();
     console.log(`Server running at: ${server.info.uri}`);
 };
 
+// Does this handle all errors?
 process.on('unhandledRejection', (err) => {
-
     console.log(err);
     process.exit(1);
 });
